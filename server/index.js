@@ -8,14 +8,18 @@ dotenv.config();
 
 
 
-
-
 const app = express();
 const PORT = process.env.PORT;
 
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// e.g. in index.js, before app.listen(…)
+app.get('/health', (req, res) => {
+    res.status(200).json({ status: 'OK' });
+  });
+  
 
 
 //get all tasks
