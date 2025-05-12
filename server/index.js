@@ -1,7 +1,6 @@
 import express from 'express';
 import cors from 'cors';
 import db from './data.js';
-import dotenv from 'dotenv';
 
 
 
