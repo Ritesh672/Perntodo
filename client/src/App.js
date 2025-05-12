@@ -1,92 +1,88 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+// App.js
+import React, { useState, useEffect } from 'react';
+import { getTasks, createTask, deleteTask, updateTask } from './api/task';
+import TaskForm from './components/TaskForm';
 import TaskItem from './components/TaskItem';
-
-import {
-  Container,
-  TextField,
-  Button,
-  Typography,
-  List,
-  Stack,
-} from '@mui/material';
-
-const API_URL = 'http://localhost:5000/tasks';
+import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
+import Stack from '@mui/material/Stack';
+import CircularProgress from '@mui/material/CircularProgress';
 
 function App() {
   const [tasks, setTasks] = useState([]);
-  const [description, setDescription] = useState('');
+  const [loading, setLoading] = useState(true);
 
+  // Fetch tasks on mount
   useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const response = await getTasks();
+        setTasks(response.data);
+      } catch (error) {
+        console.error('Failed to fetch tasks:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchTasks();
   }, []);
 
-  const fetchTasks = async () => {
+  // Add a new task
+  async function addTask(description) {
     try {
-      const res = await axios.get(API_URL);
-      setTasks(res.data);
-    } catch (err) {
-      console.error(err);
+      const response = await createTask(description);
+      setTasks(prev => [...prev, response.data]);
+    } catch (error) {
+      console.error('Error adding task:', error);
     }
-  };
+  }
 
-  const addTask = async () => {
-    if (!description.trim()) return;
+  // Delete a task
+  async function deleteItem(id) {
     try {
-      const res = await axios.post(API_URL, { description });
-      setTasks([...tasks, res.data]);
-      setDescription('');
-    } catch (err) {
-      console.error(err);
+      await deleteTask(id);
+      setTasks(prev => prev.filter(task => task.todo_id !== id));
+    } catch (error) {
+      console.error('Error deleting task:', error);
     }
-  };
+  }
 
-  const deleteTask = async (id) => {
+  // Update a task
+  async function editItem(id, description) {
     try {
-      await axios.delete(`${API_URL}/${id}`);
-      setTasks(tasks.filter(task => task.todo_id !== id));
+      console.log(description, id);
+      const response = await updateTask(id, description);
+      setTasks(prevTasks => 
+        prevTasks.map(task => 
+          task.todo_id === id ? { ...task, description } : task
+        ));
     } catch (err) {
-      console.error(err);
+      console.log("error while making put request ", err);
     }
-  };
-
-  const updateTask = async (id, newDescription) => {
-    try {
-      await axios.put(`http://localhost:5000/task/${id}`, { description: newDescription });
-      setTasks(tasks.map(task =>
-        task.todo_id === id ? { ...task, description: newDescription } : task
-      ));
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
+  }
+  
   return (
     <Container maxWidth="sm" sx={{ mt: 4 }}>
-      <Typography variant="h4" align="center" gutterBottom>
-        Task Manager
+      <Typography variant="h4" gutterBottom align="center">
+        To-Do List
       </Typography>
-      <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
-        <TextField
-          fullWidth
-          label="New Task"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-        <Button variant="contained" onClick={addTask}>
-          Add
-        </Button>
+      <TaskForm check={addTask} />
+      <Stack spacing={2} mt={4}>
+        {loading ? (
+          <CircularProgress />
+        ) : (
+          tasks.map(task => (
+            <TaskItem
+              key={task.todo_id}
+              id={task.todo_id}
+              description={task.description}
+              delete={deleteItem}
+              update={editItem}
+            />
+          ))
+        )}
       </Stack>
-      <List>
-        {tasks.map(task => (
-          <TaskItem
-            key={task.todo_id}
-            task={task}
-            onDelete={deleteTask}
-            onUpdate={updateTask}
-          />
-        ))}
-      </List>
     </Container>
   );
 }
