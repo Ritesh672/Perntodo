@@ -2,11 +2,9 @@ import express from 'express';
 import cors from 'cors';
 import db from './data.js';
 import dotenv from "dotenv";
+import authRoutes from "./routes/auth.js";
 
 dotenv.config();
-
-
-
 
 const app = express();
 const PORT = process.env.PORT;
@@ -14,6 +12,7 @@ const PORT = process.env.PORT;
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use('/auth', authRoutes);
 
 // e.g. in index.js, before app.listen(…)
 app.get('/health', (req, res) => {

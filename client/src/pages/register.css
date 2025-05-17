@@ -1,0 +1,32 @@
+/* register.css */
+
+.register-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f1f8e9, #c5e1a5);
+  padding: 20px;
+}
+
+.register-card {
+  padding: 2rem;
+  width: 100%;
+  max-width: 400px;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+}
+
+.register-title {
+  text-align: center;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  color: #33691e;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
