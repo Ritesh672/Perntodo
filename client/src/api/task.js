@@ -14,7 +14,7 @@ export const deleteTask = (id) => axios.delete(`${BASE_URL}/tasks/${id}`);
 
 // post request to identify the user
 
-export const getLogin = (email, password) => axios.post(`${BASE_URL}/login`, { email, password});
-export const getRegister = (username , email, password) => axios.post(`${BASE_URL}/register`, {username, email, password});
+export const getLogin = (email, password) => axios.post(`${BASE_URL}/auth/login`, { email, password});
+export const getRegister = (username , email, password) => axios.post(`${BASE_URL}/auth/register`, {username, email, password});
 
 
