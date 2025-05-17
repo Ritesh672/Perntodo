@@ -28,7 +28,7 @@ function Login() {
       if (response?.data?.token) {
         console.log("Successful login");
         localStorage.setItem("token", response.data.token);
-        navigate("/home");
+        navigate("/");
       } else {
         console.log("Login failed: No token returned");
       }
