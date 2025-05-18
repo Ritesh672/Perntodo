@@ -35,7 +35,7 @@ function Register() {
             const result = await getRegister(registerInput.username, registerInput.email, registerInput.password);
             console.log("user registered sucessfully");
             // navigate the user to the home page
-            navigate("/home");
+            navigate("/");
         }catch (error){
             console.log("error while login", error);
         }
